@@ -1,0 +1,228 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <title>DJango Ajax Post Comments App</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+    <script type='text/javascript'>
+$(document).ready(function() {
+    $.ajax({
+        type: "GET",
+        url: "countries",
+        dataType: "json",
+        success: function(response) {
+            var countries = JSON.parse(response["countries"]);
+            $("#country option").remove();
+            var msg_data = "<option  value='0'>--Select Country--</option>";
+            $("#country").append(msg_data).value;
+            $.each(countries, function(i, country) {
+                msg_data = "<option  value='" + country.pk + "'>" + country.fields.country_name + "</option>";
+                $("#country").append(msg_data).value;
+            });
+        }
+    });
+
+    $("#country").click(function(e) {
+        e.preventDefault();
+        var countryId = $("#country").val();
+        $.ajax({
+            type: "GET",
+            url: "states?countryId=" + countryId,
+            dataType: "json",
+            success: function(response) {
+                var states = JSON.parse(response["states"]);
+                $("#state option").remove();
+                var msg_data = "<option  value='0'>--Select State--</option>";
+                $("#state").append(msg_data).value;
+                $.each(states, function(i, state) {
+                    msg_data = "<option  value='" + state.pk + "'>" + state.fields.state_name + "</option>";
+                    $("#state").append(msg_data).value;
+                });
+            }
+        });
+    });
+
+    $("#state").click(function(e) {
+        e.preventDefault();
+        var stateId = $("#state").val();
+        $.ajax({
+            type: "GET",
+            url: "cities?stateId=" + stateId,
+            dataType: "json",
+            success: function(response) {
+                var cities = JSON.parse(response["cities"]);
+                $("#city option").remove();
+                var msg_data = "<option  value='0'>--Select State--</option>";
+                $("#city").append(msg_data).value;
+                $.each(cities, function(i, city) {
+                    msg_data = "<option  value='" + city.pk + "'>" + city.fields.city_name + "</option>";
+                    $("#city").append(msg_data).value;
+                });
+            }
+        });
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <span class="navbar-text">COUNTRY STATE CITY -DJANGO ALL QUERIES COOKBOOK</span>
+</nav>
+<div class="container-fluid">
+    <div id="wrapper">
+        <div id="content">
+            <div class="container-fluid">
+                <div class="container">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <!-- Dropdown Card Example -->
+                                <div class="card shadow border-success   mb-4">
+                                    <!-- Card Header - Dropdown -->
+                                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                        <h6 class="m-0 font-weight-bold text-primary"> COUNTRY STATE CITY SELECT
+                                            OPTION
+                                        </h6>
+                                    </div>
+                                    <!-- Card Body -->
+                                    <div class="card-body text-success">
+                                        <div class="form-group">
+                                            <label for="sel1">Select Country:</label>
+                                            <select class="form-control" id="country"></select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="sel2">Select State:</label>
+                                            <select class="form-control" id="state"></select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="sel3">Select City:</label>
+                                            <select class="form-control" id="city"></select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <!-- Dropdown Card Example -->
+                                <div class="card shadow border-success   mb-4">
+                                    <!-- Card Header - Dropdown -->
+                                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                        <h6 class="m-0 font-weight-bold text-primary"> QUERIES SET AS FOLLOW
+                                        </h6>
+                                    </div>
+                                    <!-- Card Body -->
+                                    <div class="card-body text-success">
+                                        <div class="form-group">
+                                            <a href="doAnd">How to do AND queries in Django ORM?</a>
+                                            {%for country in and%}
+                                            {{country.id}} : {{country.country_name}} <br>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="form-group">
+                                            <a href="doOr">How to do OR queries in Django ORM?</a>
+                                            {%for country in or%}
+                                            {{country.id}} : {{country.country_name}} <br>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="form-group">
+                                            <a href="doSelectSomeFields">How to select some fields only in a
+                                                queryset?</a>
+                                            {%for country in SomeFields%}
+                                            {{country.state}} : {{country.country_name}} <br>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="form-group">
+                                            <a href="doFindLargest">How to find second largest record using Django ORM
+                                                ?</a>
+                                            {{SecondLargest.id}} : {{SecondLargest.country_name}} <br>
+                                        </div>
+                                        <div class="form-group">
+                                            <a href="doAsc">How to order a queryset in ascending order?</a>
+                                            {%for country in asc%}
+                                            {{country.id}} : {{country.country_name}} <br>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="form-group">
+                                            <a href="doDesc">How to order a queryset in descending order?</a>
+                                            {%for country in desc%}
+                                            {{country.id}} : {{country.country_name}} <br>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="form-group">
+                                            <a href="doLike">orm like query</a>
+                                            {%for country in like%}
+                                            {{country.id}} : {{country.country_name}} <br>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="form-group">
+                                            <a href="doBetween">django orm between query</a>
+                                            {%for country in between%}
+                                            {{country.id}} : {{country.country_name}} <br>
+                                            {% endfor %}
+                                        </div>
+                                        <hr/>
+                                        <h6 class="m-0 font-weight-bold text-primary">DJANGO AGGREGATE QUERIES SET AS
+                                            FOLLOW
+                                        </h6>
+                                        <hr/>
+                                        <div class="form-group">
+                                            <a href="getCount">Get count </a>
+                                            COUNTRY COUNT : {{countryCount}}
+                                            STATE COUNT : {{stateCount}}
+                                            CITY COUNT: {{cityCount}}
+                                        </div>
+                                        <div class="form-group">
+                                            <a href="getCountBy">Get count states by Country </a> :
+                                            {%for country in CountBy%}
+                                            {{country.country_name}} : {{country.count}}
+                                            {% endfor %}
+                                        </div>
+                                        <div class="form-group">
+                                            <a href="getAve">Get average</a> : {{Average}}
+                                        </div>
+                                        <div class="form-group">
+                                            <a href="getMin">Get min</a>: {{Min}}
+                                        </div>
+                                        <div class="form-group">
+                                            <a href="getMax">Get max</a>: {{Max}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+
